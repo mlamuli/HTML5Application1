@@ -1,0 +1,177 @@
+  <!--
+  To change this license header, choose License Headers in Project Properties.
+  To change this template file, choose Tools | Templates
+  and open the template in the editor.
+  -->
+  <!DOCTYPE html>
+  <html>
+      <head>
+          <title>mla zondo</title>
+           <meta name="viewport" content="width=device-width, initial-scale=1">
+           <link rel="stylesheet" type="text/css" href="js/libs/css/jquery.mobile.flatui.css" />
+          <script src="js/libs/js/jquery.min.js"></script>
+            <script src="js/libs/js/jquery.mobile-1.3.1.min.js"></script>
+             <script src="js/libs/js/jquery.min.js"></script>
+           <script src="Scripts/jquery.signalR-2.0.0-beta2.min.js"></script>
+           <script type="text/javascript" charset="utf-8" src="js/libs/Cordova-2.9.0/cordova-2.9.0.js"></script>
+<script type="text/javascript" charset="utf-8" src="statusbarnotification.js"></script>
+           
+           
+            <script src="http://mla.azurewebsites.net/signalr/hubs" type="text/javascript"></script>  
+            <script>
+                $(function ()
+                {
+                    document.addEventListener("deviceready", onDeviceReady, false);
+
+                   
+                    function onDeviceReady() 
+                    {
+                        //when device is ready
+                    }
+    
+                    $.connection.hub.url = "http://mla.azurewebsites.net/signalr/";
+                    var hub = $.connection.serverHub;
+                    
+			
+                    var list=$('#notifylist');
+					$(document).on("click",'#notifylist>li',function(){
+							var i=(this.id);
+							
+								
+								
+							    
+							
+							});
+						
+                    hub.client.broadcast = function (msg,date,course) 
+					{
+                                            window.plugins.statusBarNotification.notify("Put your title here", "Put your message here");
+                                            navigator.notification.vibrate(2000);
+                                            navigator.notification.beep(1);
+                                            navigator.notification.alert(
+                                            msg,  // message
+                                            course, // title
+                                            'ok'  // buttonName
+                                        );
+						var i=0;
+						var id='#'+date;
+						var mg='notify'+i
+						var pageid='#'+mg;
+						var p=mg;
+						
+						
+						$('<li id='+id+' data-corners="false" data-shadow="false" data-iconshadow="true" data-wrapperels="div" data-icon="arrow-r" data-iconpos="right" data-theme="c" class="ui-btn ui-btn-icon-right ui-li-has-arrow ui-li ui-li-has-thumb ui-first-child ui-last-child ui-btn-up-c"><div class="ui-btn-inner ui-li"><div class="ui-btn-text"><a href='+pageid+' class="ui-link-inherit" data-transition="slide"><img src="js/libs/icons/group.png" class="ui-li-thumb"><h1 class="ui-li-heading">'+course+'</h1><h6 class="ui-li-desc">' + msg + '</h6></a></div><span class="ui-icon ui-icon-arrow-r ui-icon-shadow">&nbsp;</span></div></li>').appendTo(list);
+						
+
+                       
+						
+					      $('<div data-role="page" id='+p+'><div data-role="header"><a data-transition="slide" data-direction="reverse" href="#home" data-iconpos="notext" data-iconshadow="true" data-icon="back"></a><h1>Recieved Message</h1></div><div data-role="content"><div data-role="collapsible" data-inset="false" data-theme="a" data-content-theme="c"><h3>'+course+'</h3><p style="color:#fffff;">'+msg+'</p></div></div></div>').appendTo("body");
+           			 i=i+1;
+				
+					}
+	
+	
+		
+                    $("#cons").click(function(){
+			   
+                       
+
+                        $.connection.hub.start().done(function () {
+
+                            var name = $("#name").val();
+                            var group = $("#select-choice-a").val();
+
+                            hub.server.connect(name, group);
+
+
+                        });
+
+                        //connect to the server and get feed back if u connected 
+                        hub.client.returnConnectionStatus = function (msg) {
+
+                            alert(msg);
+                        };
+                        
+                        $.connection.hub.disconnected(function() {
+                                    setTimeout(function() {
+                                          $.connection.hub.start();
+                                    }, 5000); // Restart connection after 5 seconds.
+                          });
+
+                    });
+
+       
+                });
+		
+		 $(function ()
+                 {
+                    
+                 })         
+                 
+           </script>
+      </head>
+      
+  <body>
+ 
+  <!--main page-->
+  <div data-role="page" id="home"  data-theme="c">
+           <!--navigation bar-->
+          <div data-role="panel" id="panel1" data-position="left" data-theme="a">
+           <ul data-role="listview">
+            <li data-theme="a"><h1>Settings</h1></li>
+           <li><a href="#connect">Connect</a></li>
+           <li><a >Notifications</a></li>
+            <li data-theme="a"><h1>About</h1></li>
+             <li><a>Help</a></li>
+             <li><a>Author info</a></li>
+              <li><a>Develop</a></li>
+           </ul>  
+           
+          </div>
+              <div data-role="header">
+                  <h1>Notifics</h1>
+                  <a href="#panel1" data-icon="flat-menu" data-iconpos="notext" data-theme="a"></a>
+              </div>
+              <div data-role="content">  
+                  <ul id="notifylist" data-role="listview" data-transition="slide"  data-theme="c" data-dividertheme="a" data-filter="true" data-filter-placeholder="Search for notifies...">
+                     
+                   </ul>      
+             </div>
+          </div> <!--main page ends-->
+          
+          <!--connect page page starts-->
+          <div data-role="page" id="connect">
+            <div data-role="header">
+            <a data-icon="home" data-iconpos="notext" href="#home" data-transition="slide" data-direction="reverse" ></a>
+              <h1>Settings...Connect</h1>
+            </div>
+            <div data-role="content">
+            <h3>Please provide your user name and select a group then connect</h3>
+            
+            
+            <div class="ui-controlgroup">
+            <label>User name:</label>
+            <input id="name" type="text" data-icon="flat-men"/>
+            <select name="select-choice" id="select-choice-a" data-native-menu="false" data-theme="a">
+                <option value="tp1">Technical Programming1</option>
+                <option value="tp2">Technical Programming2</option>
+                <option value="ds1">Development Software 1</option>
+                <option value="ds2">Development Software 2</option>
+    		</select>
+            </div>
+            <a id="cons" href="#home" data-role="button"  data-theme="a"  data-icon="arrow-r" data-iconpos="right">Connect</a>
+             <p>make sure you have read the <a href="#terms">terms and conds </a></p>
+            </div>
+           
+          </div> <!--connect page page ends-->
+          
+          
+   
+         
+
+         
+         
+         
+         
+  </body>
+  </html>
